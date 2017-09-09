@@ -23,4 +23,4 @@ h.update(command3)
 new_token = h.hexdigest()
 
 with open(output_file, 'w') as f:
-	f.write("token=" + new_token + "&" + m + command3)
+	f.write("token=" + new_token + "&" + m + quote(padding(length_of_m * 8)) + command3)
