@@ -55,7 +55,8 @@ def main():
 
 			# AES decrypt
 			text = decrypt(rsakey, ciphertext)
-			print text
+			if text != "ValueError":
+				print text
 
 if __name__ == "__main__":
 	main()

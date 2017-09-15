@@ -62,7 +62,8 @@ def decrypt(rsakey,c):
     sentinel = 'error'
     aeskey = cipher.decrypt(rsam,sentinel)
     if aeskey == sentinel:
-        raise ValueError
+        # raise ValueError
+		return "ValueError"
 
     iv = data[index:index+AES.block_size]
     cipher = AES.new(aeskey,AES.MODE_CBC,iv)
