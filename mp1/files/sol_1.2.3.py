@@ -20,7 +20,11 @@ blocks = map(''.join, zip(*[iter(ciphertext)] * 32)) # break into 16-byte blocks
 pads = [hex(i)[2:].zfill(2) for i in range(16, 0, -1)] # put padding bytes into an array
 plaintext = deque() # this will be final plaintext
 
+print "Total number of blocks: " + str(len(blocks))
+
 for i in range(1, len(blocks)): # go through all blocks starting from the last 2
+	
+	print "Starting decryption of block " + str(len(blocks) - i)
 
 	c1 = map(''.join, zip(*[iter(blocks[-(i + 1)])] * 2)) # break each 16-byte block into individual bytes
 	cp = map(''.join, zip(*[iter(blocks[-(i + 1)])] * 2)) # c1 that will be modified
@@ -38,6 +42,7 @@ for i in range(1, len(blocks)): # go through all blocks starting from the last 2
 				if j == 16: # the whole block has been decrypted
 					print "Block " + str(len(blocks) - i) + " decrypted!"
 					plaintext.appendleft(p)
+					print "Plaintext so far: " + ''.join([chr(int(c, 16)) for sublist in plaintext for c in sublist])
 				else:
 					for k in range(1, j + 1): # adapt padding			
 						cp[-k] = hex(int(pads[j - k + 1], 16)  ^ int(p[-k], 16) ^ int(c1[-k], 16))[2:].zfill(2) 
