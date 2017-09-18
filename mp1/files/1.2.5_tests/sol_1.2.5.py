@@ -24,6 +24,7 @@ def getCoprimes(e = 65537):
 
 e = 65537
 netid = "yschiu2"
+ser = 1000
 '''
 p = getPrime(1024)
 print 'p: ' + str(p)
@@ -31,14 +32,14 @@ q = getPrime(1024)
 print 'q: ' + str(q)
 
 privkey, pubkey = make_privkey(p, q)
-cert = make_cert(netid, pubkey)
+cert = make_cert(netid, pubkey, serial = ser)
 
 with open("cert1.cer", 'wb') as f:
     f.write(cert.public_bytes(Encoding.DER))
 
-with open("cert1.cer", 'rb') as f:
-    cert_bytes = f.read()
-    cert = x509.load_der_x509_certificate(cert_bytes, default_backend())
+#with open("cert1.cer", 'rb') as f:
+#    cert_bytes = f.read()
+#    cert = x509.load_der_x509_certificate(cert_bytes, default_backend())
 
 print
 print cert.tbs_certificate_bytes[:256].encode("hex")
@@ -47,8 +48,8 @@ with open("prefix", 'wb') as f:
     f.write(cert.tbs_certificate_bytes[:256])
 '''
 
-b1 = int("df89d48c5d344ff4184a6ed1689aa123757b8e09a06c61f012ce41aa0912af91d2e5aee7de0d42bb4f283f14c9a7905859546f2a2ca4550e64220654d36a7c9b0e50942cca09803dfabb178d36e62a99c7dd2c371ec9980b8605f0575f4c6dc1e815c1e9f2a69bdf16c5ebf84506640f002972216937aa910cff78d00e1366b1", 16)
-b2 = int("df89d48c5d344ff4184a6ed1689aa123757b8e89a06c61f012ce41aa0912af91d2e5aee7de0d42bb4f283f14c927915859546f2a2ca4550e642206d4d36a7c9b0e50942cca09803dfabb178d36e62a99c7dd2cb71ec9980b8605f0575f4c6dc1e815c1e9f2a69bdf16c5ebf84586630f002972216937aa910cff78500e1366b1", 16)
+b1 = int("8bfd6b3d3880692ac2054bd4e64c7aabe09cdad9f8150f75268e82a930b4add5dfc8a8ba6027b4e9ebc74f13eee19d5ac35325adb70d8e9f221f75873197fd4e98b512af8d1079432f2621c0d5376fa3b2a6e96321394062dd7bf6cc5c315da2878757fa398973b0694bb4cf88f1820ac898fa518c9eb3cd48a55d8c43131422", 16)
+b2 = int("8bfd6b3d3880692ac2054bd4e64c7aabe09cda59f8150f75268e82a930b4add5dfc8a8ba6027b4e9ebc74f13ee619e5ac35325adb70d8e9f221f75073197fd4e98b512af8d1079432f2621c0d5376fa3b2a6e9e321394062dd7bf6cc5c315da2878757fa398973b0694bb4cf8871820ac898fa518c9eb3cd48a55d0c43131422", 16)
 
 found = False
 i = 0
@@ -78,11 +79,12 @@ while not found:
             break
         k += 1
 
+
 privKeyOne, pubKeyOne = make_privkey(p1, q1)
 privKeyTwo, pubKeyTwo = make_privkey(p2, q2)
 
-certOne = make_cert("yschiu2", pubKeyOne)
-certTwo = make_cert("yschiu2", pubKeyTwo)
+certOne = make_cert("yschiu2", pubKeyOne, serial = ser)
+certTwo = make_cert("yschiu2", pubKeyTwo, serial = ser)
 
 print "Certificate 1"
 print certOne.tbs_certificate_bytes.encode("hex")
