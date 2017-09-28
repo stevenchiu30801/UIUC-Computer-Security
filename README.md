@@ -7,7 +7,7 @@ The MPs are programmed in collaboration with [Anton Ippolitov](https://github.co
 There are five MPs in the course as below.
 
 * MP1: Cryptography
-* MP2:
+* MP2: Application Security
 * MP3:
 * MP4:
 * MP5:
