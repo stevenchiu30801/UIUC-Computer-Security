@@ -3,10 +3,6 @@ import dpkt
 import sys
 import socket
 
-class packetCounter:
-    syn = 0
-    synack = 0
-
 def inet_to_str(inet):
     try:
         return socket.inet_ntop(socket.AF_INET, inet)
@@ -32,21 +28,21 @@ def main():
                         tcp = ip.data
                         syn_flag = ( tcp.flags & dpkt.tcp.TH_SYN ) != 0
                         ack_flag = ( tcp.flags & dpkt.tcp.TH_ACK ) != 0
-                        if syn_flag and ack_flag: # add dst to dict and synack++
+                        if syn_flag and ack_flag:
                             dst = inet_to_str(ip.dst)
                             if not ips.has_key(dst):
-                                ips[dst] = packetCounter()
-                            ips[dst].synack += 1
-                        elif syn_flag: # add src to dict and syn++
+                                ips[dst] = 0
+                            ips[dst] -= 3 # each syn+ack has a weight of -3
+                        elif syn_flag:
                             src = inet_to_str(ip.src)
                             if not ips.has_key(src):
-                                ips[src] = packetCounter()
-                            ips[src].syn += 1
+                                ips[src] = 0
+                            ips[src] += 1 # each syn has a weight of +1
             except:
-                pass # ignore exceptions
+                pass # ignore exceptions
 
     for key in ips:
-        if ips[key].synack * 3 < ips[key].syn:
+        if ips[key] > 0: # true when there are more syns that 3 * syn+acks
             print key
 
     sys.exit(0)
