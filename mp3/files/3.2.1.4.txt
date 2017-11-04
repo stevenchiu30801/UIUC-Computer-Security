@@ -1,5 +1,14 @@
-# example content
-# ftp
-# telnet
-# smtp
-# pop3
+ftp
+ssh
+https
+tn-tl-w1
+nfa
+connection
+tmesis-upshot
+3comfaxrpc
+eserver-pap
+dhcps
+ntp
+netbios-ns
+netbios-dgm
+zeroconf
