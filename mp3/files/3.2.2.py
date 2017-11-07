@@ -28,12 +28,21 @@ def main():
                         tcp = ip.data
                         syn_flag = ( tcp.flags & dpkt.tcp.TH_SYN ) != 0
                         ack_flag = ( tcp.flags & dpkt.tcp.TH_ACK ) != 0
-                        if syn_flag and ack_flag:
+
+                        rst_flag = ( tcp.flags & dpkt.tcp.TH_RST ) != 0
+                        psh_flag = ( tcp.flags & dpkt.tcp.TH_PUSH) != 0
+                        urg_flag = ( tcp.flags & dpkt.tcp.TH_URG ) != 0
+                        ece_flag = ( tcp.flags & dpkt.tcp.TH_ECE ) != 0
+                        cwr_flag = ( tcp.flags & dpkt.tcp.TH_CWR ) != 0
+                        fin_flag = ( tcp.flags & dpkt.tcp.TH_FIN ) != 0
+
+                        other_flags = rst_flag or psh_flag or urg_flag or ece_flag or cwr_flag or fin_flag
+                        if syn_flag and ack_flag and not other_flags:
                             dst = inet_to_str(ip.dst)
                             if not ips.has_key(dst):
                                 ips[dst] = 0
                             ips[dst] -= 3 # each syn+ack has a weight of -3
-                        elif syn_flag:
+                        elif syn_flag and not other_flags:
                             src = inet_to_str(ip.src)
                             if not ips.has_key(src):
                                 ips[src] = 0
