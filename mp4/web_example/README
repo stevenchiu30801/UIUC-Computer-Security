@@ -1,0 +1,25 @@
+This example shows of a few HTML/Javascript features, along with an SQL example
+
+You must have python/bottle/sqlite installed to run the full examples.
+
+Instruction for Ubuntu 14.04 LTS. Run these commands(Some may have to be run as sudo):
+
+#Install sqlite3
+apt-get install sqlite
+apt-get install python-sqlite
+
+#Install Pip
+wget https://bootstrap.pypa.io/get-pip.py
+python get-pip.py
+
+#Install bottle
+pip install bottle
+
+
+Then, run:
+
+python2 server.py
+
+Go to localhost:8080, and the sample webpage should appear
+
+
