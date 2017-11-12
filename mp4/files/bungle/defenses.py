@@ -25,7 +25,7 @@ class XSSEncodeAngles(object):
         response.set_header("X-XSS-Protection", "0");
     @staticmethod
     def filter(user_input):
-        #TODO: complete this filter definition
+        user_input = user_input.replace("<", "&lt;").replace(">", "&gt;")
         return user_input	
 
 ############################################################
@@ -53,8 +53,10 @@ class CSRFToken(object):
     def init(request, response):
         token = request.get_cookie("csrf_token")
 
-        #TODO: implement Token validation
-
+        if token is None:
+            token = os.urandom(16).encode('hex')
+            
+        response.set_cookie("csrf_token", token)
         return token
     @staticmethod
     def formHTML(token):
