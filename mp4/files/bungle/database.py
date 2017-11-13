@@ -27,9 +27,22 @@ def createUser(username, password):
     m = md5()
     m.update(password)
     passwordhash = m.hexdigest()
-    qry = """INSERT INTO user (username, password, passwordhash) VALUES (%s, %s, %s)"""
-    args = (username, password, passwordhash)
+    # qry = """INSERT INTO user (username, password, passwordhash) VALUES (%s, %s, %s)"""
+    # args = (username, password, passwordhash)
+    # cur.execute(qry, args)
+    qry = """PREPARE stm1 FROM 'INSERT INTO user (username, password, passwordhash) VALUES (?, ?, ?)'"""
+    cur.execute(qry)
+    qry = """SET @a = %s"""
+    args = (username, )
     cur.execute(qry, args)
+    qry = """SET @b = %s"""
+    args = (password, )
+    cur.execute(qry, args)
+    qry = """SET @c = %s"""
+    args = (passwordhash, )
+    cur.execute(qry, args)
+    qry = """EXECUTE stm1 USING @a, @b, @c"""
+    cur.execute(qry)
     db_rw.commit()
 
 def validateUser(username, password):
@@ -42,9 +55,19 @@ def validateUser(username, password):
     db_rw = connect()
     cur = db_rw.cursor()
     #TODO: Implement a prepared statement using cur.execute() so that this query selects a row from table user
-    qry = """SELECT * FROM user WHERE user.username = %s and user.password = %s"""
-    args = (username, password)
+    # qry = """SELECT * FROM user WHERE user.username = %s and user.password = %s"""
+    # args = (username, password)
+    # cur.execute(qry, args)
+    qry = """PREPARE stm1 FROM 'SELECT * FROM user WHERE user.username = ? and user.password = ?'"""
+    cur.execute(qry)
+    qry = """SET @a = %s"""
+    args = (username, )
     cur.execute(qry, args)
+    qry = """SET @b = %s"""
+    args = (password, )
+    cur.execute(qry, args)
+    qry = """EXECUTE stm1 USING @a, @b"""
+    cur.execute(qry)
     if cur.rowcount < 1:
         return False
     return True
@@ -61,10 +84,16 @@ def fetchUser(username):
     cur = db_rw.cursor(mdb.cursors.DictCursor)
     print username
     #TODO: Implement a prepared statement so that this query selects a id and username of the row which has column username = username
-    qry = """SELECT id, username FROM user WHERE user.username = %s"""
+    # qry = """SELECT id, username FROM user WHERE user.username = %s"""
+    # args = (username, )
+    # cur.execute(qry, args)
+    qry = """PREPARE stm1 FROM 'SELECT id, username FROM user WHERE user.username = ?'"""
+    cur.execute(qry)
+    qry = """SET @a = %s"""
     args = (username, )
-    # args = {'username' : username}
     cur.execute(qry, args)
+    qry = """EXECUTE stm1 USING @a"""
+    cur.execute(qry)
     if cur.rowcount < 1:
         return None
     return FormsDict(cur.fetchone())
@@ -78,9 +107,19 @@ def addHistory(user_id, query):
     db_rw = connect()
     cur = db_rw.cursor()
     #TODO: Implement a prepared statment using cur.execute() so that this query inserts a row in table history
-    qry = """INSERT INTO history (user_id, query) VALUES (%s, %s)"""
-    args = (user_id, query)
+    # qry = """INSERT INTO history (user_id, query) VALUES (%s, %s)"""
+    # args = (user_id, query)
+    # cur.execute(qry, args)
+    qry = """PREPARE stm1 FROM 'INSERT INTO history (user_id, query) VALUES (?, ?)'"""
+    cur.execute(qry)
+    qry = """SET @a = %s"""
+    args = (user_id, )
     cur.execute(qry, args)
+    qry = """SET @b = %s"""
+    args = (query, )
+    cur.execute(qry, args)
+    qry = """EXECUTE stm1 USING @a, @b"""
+    cur.execute(qry)
     db_rw.commit()
 
 #grabs last 15 queries made by user with id=user_id from table named history
@@ -94,8 +133,15 @@ def getHistory(user_id):
     db_rw = connect()
     cur = db_rw.cursor()
     #TODO: Implement a prepared statement using cur.execute() so that this query selects 15 distinct queries from table history
-    qry = """SELECT query FROM history WHERE history.user_id = %s ORDER BY history.id DESC LIMIT 15"""
+    # qry = """SELECT query FROM history WHERE history.user_id = %s ORDER BY history.id DESC LIMIT 15"""
+    # args = (user_id, )
+    # cur.execute(qry, args)
+    qry = """PREPARE stm1 FROM 'SELECT query FROM history WHERE history.user_id = ? ORDER BY history.id DESC LIMIT 15'"""
+    cur.execute(qry)
+    qry = """SET @a = %s"""
     args = (user_id, )
     cur.execute(qry, args)
+    qry = """EXECUTE stm1 USING @a"""
+    cur.execute(qry)
     rows = cur.fetchall();
     return [row[0] for row in rows]
