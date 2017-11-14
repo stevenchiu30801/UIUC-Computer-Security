@@ -133,10 +133,10 @@ def getHistory(user_id):
     db_rw = connect()
     cur = db_rw.cursor()
     #TODO: Implement a prepared statement using cur.execute() so that this query selects 15 distinct queries from table history
-    # qry = """SELECT query FROM history WHERE history.user_id = %s ORDER BY history.id DESC LIMIT 15"""
+    # qry = """SELECT DISTINCT query FROM history WHERE user_id = 1 GROUP BY query ORDER BY max(id) DESC LIMIT 15"""
     # args = (user_id, )
     # cur.execute(qry, args)
-    qry = """PREPARE stm1 FROM 'SELECT query FROM history WHERE history.user_id = ? ORDER BY history.id DESC LIMIT 15'"""
+    qry = """PREPARE stm1 FROM 'SELECT DISTINCT query FROM history WHERE user_id = ? GROUP BY query ORDER BY max(id) DESC LIMIT 15'"""
     cur.execute(qry)
     qry = """SET @a = %s"""
     args = (user_id, )
