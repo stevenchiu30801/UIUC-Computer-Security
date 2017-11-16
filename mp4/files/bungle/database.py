@@ -27,7 +27,7 @@ def createUser(username, password):
     m = md5()
     m.update(password)
     passwordhash = m.hexdigest()
-    qry = """INSERT INTO user (username, password, passwordhash) VALUES (%s, %s, %s)"""
+    qry = """INSERT INTO users (username, password, passwordhash) VALUES (%s, %s, %s)"""
     args = (username, password, passwordhash)
     cur.execute(qry, args)
     db_rw.commit()
@@ -42,7 +42,7 @@ def validateUser(username, password):
     db_rw = connect()
     cur = db_rw.cursor()
     #TODO: Implement a prepared statement using cur.execute() so that this query selects a row from table user
-    qry = """SELECT * FROM user WHERE user.username = %s and user.password = %s"""
+    qry = """SELECT * FROM users WHERE username = %s and password = %s"""
     args = (username, password)
     cur.execute(qry, args)
     if cur.rowcount < 1:
@@ -61,7 +61,7 @@ def fetchUser(username):
     cur = db_rw.cursor(mdb.cursors.DictCursor)
     print username
     #TODO: Implement a prepared statement so that this query selects a id and username of the row which has column username = username
-    qry = """SELECT id, username FROM user WHERE user.username = %s"""
+    qry = """SELECT id, username FROM users WHERE username = %s"""
     args = (username, )
     cur.execute(qry, args)
     if cur.rowcount < 1:
