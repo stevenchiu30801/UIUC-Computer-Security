@@ -1,0 +1,12 @@
+CREATE TABLE users (id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				username VARCHAR(32) NOT NULL UNIQUE,
+				INDEX(username),
+				password VARCHAR(32) NOT NULL,
+				passwordhash BLOB(16) NOT NULL
+				);
+
+CREATE TABLE history (id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+					user_id INT UNSIGNED NOT NULL,
+					INDEX(user_id),
+					query VARCHAR(2048) NOT NULL
+					);
