@@ -1,1 +1,1 @@
-knockd_netfilter_hook
+knockd_filter_function
